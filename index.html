@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle of Delium - 424 BCE</title>
+    <style>
+        :root {
+            --boeotian-color: #b33b3b;
+            --athenian-color: #3b57b3;
+            --background-color: #e0d9b8;
+            --map-color: #d1c9a0;
+            --timeline-bg: #f5f0dc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #5a4c2e;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #5a4c2e;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 5px;
+            color: #5a4c2e;
+        }
+        
+        .battle-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .info-box {
+            flex: 1;
+            background-color: #f5f0dc;
+            border: 1px solid #5a4c2e;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #5a4c2e;
+            border-bottom: 1px solid #5a4c2e;
+            padding-bottom: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .boeotian {
+            background-color: rgba(179, 59, 59, 0.2);
+        }
+        
+        .athenian {
+            background-color: rgba(59, 87, 179, 0.2);
+        }
+        
+        .battle-map {
+            position: relative;
+            height: 500px;
+            background-color: var(--map-color);
+            border: 2px solid #5a4c2e;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .battlefield {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .ravine {
+            position: absolute;
+            top: 40%;
+            left: 10%;
+            width: 80%;
+            height: 20px;
+            background-color: #9fc5e8;
+            border-radius: 10px;
+            opacity: 0.7;
+        }
+        
+        .unit {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            transition: all 1s ease-in-out;
+        }
+        
+        .boeotian-unit {
+            background-color: var(--boeotian-color);
+        }
+        
+        .athenian-unit {
+            background-color: var(--athenian-color);
+        }
+        
+        .timeline {
+            position: relative;
+            height: 100px;
+            background-color: var(--timeline-bg);
+            border: 2px solid #5a4c2e;
+            border-radius: 5px;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .timeline-track {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            background-color: #d4c8a2;
+            border-radius: 5px;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #5a4c2e;
+            border-radius: 50%;
+            top: -5px;
+            cursor: pointer;
+            z-index: 5;
+            transition: transform 0.2s;
+        }
+        
+        .timeline-marker:hover {
+            transform: scale(1.2);
+        }
+        
+        .timeline-marker.active {
+            background-color: #8e7442;
+            transform: scale(1.2);
+        }
+        
+        .timeline-label {
+            position: absolute;
+            top: -30px;
+            transform: translateX(-50%);
+            font-size: 12px;
+            text-align: center;
+            color: #5a4c2e;
+            width: 120px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #5a4c2e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #776341;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .phase-info {
+            background-color: var(--timeline-bg);
+            border: 1px solid #5a4c2e;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .phase-info h3 {
+            margin-top: 0;
+            color: #5a4c2e;
+        }
+        
+        .commander {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            z-index: 10;
+        }
+        
+        .pagondas {
+            background-color: var(--boeotian-color);
+        }
+        
+        .hippocrates {
+            background-color: var(--athenian-color);
+        }
+        
+        .legend {
+            background-color: var(--timeline-bg);
+            border: 1px solid #5a4c2e;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+        
+        .legend-commander {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        
+        @media (max-width: 768px) {
+            .battle-info {
+                flex-direction: column;
+            }
+            
+            .battle-map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>The Battle of Delium - 424 BCE</h1>
+            <p class="subtitle">An interactive simulation of the battle between the Boeotians and Athenians</p>
+        </header>
+        
+        <div class="battle-info">
+            <div class="info-box">
+                <h3>Battle Overview</h3>
+                <p>The Battle of Delium was fought in 424 BCE between Athens and Thebes during the Peloponnesian War. The battle resulted in a Boeotian victory despite nearly equal numbers of troops.</p>
+                <p>The Boeotian forces were commanded by Pagondas, while the Athenian forces were led by Hippocrates.</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Forces</h3>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th class="boeotian">Boeotians</th>
+                        <th class="athenian">Athenians</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Commander</strong></td>
+                        <td class="boeotian">Pagondas</td>
+                        <td class="athenian">Hippocrates</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strength</strong></td>
+                        <td class="boeotian">8,000 (excluding light-armed)</td>
+                        <td class="athenian">8,000 (excluding light-armed)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Casualties</strong></td>
+                        <td class="boeotian">~500</td>
+                        <td class="athenian">~1,000</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="battle-map">
+            <div class="battlefield">
+                <div class="ravine"></div>
+                <!-- Units will be generated by JavaScript -->
+                <div class="commander pagondas" id="pagondas"></div>
+                <div class="commander hippocrates" id="hippocrates"></div>
+            </div>
+        </div>
+        
+        <div class="phase-info">
+            <h3 id="phase-title">Phase 1: Initial Positions</h3>
+            <p id="phase-description">The Boeotian army advances downhill towards the approaching Athenian forces. Both sides are preparing for battle.</p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-track">
+                <!-- Timeline markers will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="prev-btn" disabled>Previous Phase</button>
+            <button id="next-btn">Next Phase</button>
+            <button id="play-btn">Play All Phases</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+        
+        <div class="legend">
+            <h3>Legend</h3>
+            <div class="legend-item">
+                <div class="legend-color boeotian-unit"></div>
+                <span>Boeotian Forces</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color athenian-unit"></div>
+                <span>Athenian Forces</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-commander pagondas"></div>
+                <span>Pagondas (Boeotian Commander)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-commander hippocrates"></div>
+                <span>Hippocrates (Athenian Commander)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Battle phases data
+        const battlePhases = [
+            {
+                id: 1,
+                title: "Initial Positions",
+                description: "The Boeotian army advances downhill towards the approaching Athenian forces. Both sides are preparing for battle.",
+                boeotianFormation: {
+                    center: { x: 30, y: 25, width: 8, depth: 6 },
+                    left: { x: 20, y: 25, width: 5, depth: 4 },
+                    right: { x: 45, y: 25, width: 5, depth: 4 },
+                    commander: { x: 30, y: 20 }
+                },
+                athenianFormation: {
+                    center: { x: 30, y: 65, width: 10, depth: 4 },
+                    left: { x: 20, y: 65, width: 6, depth: 3 },
+                    right: { x: 45, y: 65, width: 6, depth: 3 },
+                    commander: { x: 30, y: 60 }
+                }
+            },
+            {
+                id: 2,
+                title: "Boeotian Heavy Formation",
+                description: "The Boeotian cavalry and light-armed troops form an advanced line moving forward by ravine.",
+                boeotianFormation: {
+                    center: { x: 30, y: 30, width: 8, depth: 8 },
+                    left: { x: 20, y: 35, width: 5, depth: 4 },
+                    right: { x: 45, y: 30, width: 5, depth: 4 },
+                    commander: { x: 30, y: 25 }
+                },
+                athenianFormation: {
+                    center: { x: 30, y: 60, width: 10, depth: 4 },
+                    left: { x: 20, y: 60, width: 6, depth: 3 },
+                    right: { x: 45, y: 60, width: 6, depth: 3 },
+                    commander: { x: 30, y: 55 }
+                }
+            },
+            {
+                id: 3,
+                title: "Boeotian Advance",
+                description: "The Boeotian heavy infantry continues to march downhill while the Athenians prepare their positions.",
+                boeotianFormation: {
+                    center: { x: 30, y: 35, width: 8, depth: 8 },
+                    left: { x: 20, y: 40, width: 5, depth: 4 },
+                    right: { x: 45, y: 35, width: 5, depth: 4 },
+                    commander: { x: 30, y: 30 }
+                },
+                athenianFormation: {
+                    center: { x: 30, y: 55, width: 10, depth: 4 },
+                    left: { x: 20, y: 55, width: 6, depth: 3 },
+                    right: { x: 45, y: 55, width: 6, depth: 3 },
+                    commander: { x: 30, y: 50 }
+                }
+            },
+            {
+                id: 4,
+                title: "Deployment",
+                description: "The armies meet, and the Boeotian left and center are pushed back while their right wing with its deep formation holds strong.",
+                boeotianFormation: {
+                    center: { x: 30, y: 40, width: 8, depth: 8, scattered: true },
+                    left: { x: 20, y: 45, width: 5, depth: 4, scattered: true },
+                    right: { x: 50, y: 40, width: 5, depth: 6 },
+                    commander: { x: 35, y: 35 }
+                },
+                athenianFormation: {
+                    center: { x: 30, y: 45, width: 10, depth: 4, scattered: true },
+                    left: { x: 20, y: 50, width: 6, depth: 3, scattered: true },
+                    right: { x: 40, y: 45, width: 6, depth: 3 },
+                    commander: { x: 30, y: 45 }
+                }
+            },
+            {
+                id: 5,
+                title: "Boeotian Right Wing Maneuver",
+                description: "The Boeotian right, with its deep formation, slowly drives back the Athenian left while the center engages.",
+                boeotianFormation: {
+                    center: { x: 30, y: 45, width: 8, depth: 8, scattered: true },
+                    left: { x: 20, y: 50, width: 5, depth: 4, scattered: true },
+                    right: { x: 35, y: 45, width: 5, depth: 6 },
+                    commander: { x: 35, y: 40 }
+                },
+                athenianFormation: {
+                    center: { x: 35, y: 45, width: 10, depth: 4, scattered: true },
+                    left: { x: 25, y: 45, width: 6, depth: 3, scattered: true },
+                    right: { x: 45, y: 45, width: 6, depth: 3 },
+                    commander: { x: 35, y: 45 }
+                }
+            },
+            {
+                id: 6,
+                title: "Surprise Cavalry Attack",
+                description: "Seeing the Boeotian right in trouble, Pagondas sends cavalry around the ravine to attack the Athenian right wing.",
+                boeotianFormation: {
+                    center: { x: 30, y: 45, width: 8, depth: 6, scattered: true },
+                    left: { x: 15, y: 50, width: 5, depth: 4, scattered: true },
+                    right: { x: 35, y: 45, width: 5, depth: 6 },
+                    cavalry: { x: 60, y: 45, width: 3, depth: 2 },
+                    commander: { x: 35, y: 40 }
+                },
+                athenianFormation: {
+                    center: { x: 35, y: 50, width: 8, depth: 4, scattered: true },
+                    left: { x: 25, y: 45, width: 6, depth: 3, scattered: true },
+                    right: { x: 50, y: 45, width: 6, depth: 3 },
+                    commander: { x: 40, y: 45 }
+                }
+            },
+            {
+                id: 7,
+                title: "Athenian Panic",
+                description: "The Athenian right panics and retreats upon seeing the surprise cavalry attack. Their formation begins to break.",
+                boeotianFormation: {
+                    center: { x: 30, y: 45, width: 8, depth: 6 },
+                    left: { x: 15, y: 50, width: 5, depth: 4, scattered: true },
+                    right: { x: 35, y: 45, width: 5, depth: 6 },
+                    cavalry: { x: 55, y: 45, width: 3, depth: 2 },
+                    commander: { x: 35, y: 40 }
+                },
+                athenianFormation: {
+                    center: { x: 40, y: 55, width: 8, depth: 4, scattered: true },
+                    left: { x: 30, y: 50, width: 6, depth: 3, scattered: true },
+                    right: { x: 55, y: 55, width: 6, depth: 3, scattered: true },
+                    commander: { x: 45, y: 50 }
+                }
+            },
+            {
+                id: 8,
+                title: "Athenian Rout",
+                description: "The Athenians are routed and pursued until nightfall. The Boeotians killed 1,000 men, including Hippocrates.",
+                boeotianFormation: {
+                    center: { x: 40, y: 55, width: 8, depth: 6, scattered: true },
+                    left: { x: 30, y: 60, width: 5, depth: 4, scattered: true },
+                    right: { x: 50, y: 60, width: 5, depth: 6, scattered: true },
+                    cavalry: { x: 60, y: 60, width: 3, depth: 2 },
+                    commander: { x: 45, y: 55 }
+                },
+                athenianFormation: {
+                    center: { x: 50, y: 70, width: 8, depth: 4, scattered: true, fleeing: true },
+                    left: { x: 40, y: 75, width: 6, depth: 3, scattered: true, fleeing: true },
+                    right: { x: 65, y: 75, width: 6, depth: 3, scattered: true, fleeing: true },
+                    commander: { x: 55, y: 70 }
+                }
+            }
+        ];
+
+        // DOM elements
+        const battlefield = document.querySelector('.battlefield');
+        const timelineTrack = document.querySelector('.timeline-track');
+        const phaseTitle = document.getElementById('phase-title');
+        const phaseDescription = document.getElementById('phase-description');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const playBtn = document.getElementById('play-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const pagondas = document.getElementById('pagondas');
+        const hippocrates = document.getElementById('hippocrates');
+
+        // State
+        let currentPhase = 0;
+        let isPlaying = false;
+        let playInterval;
+        let unitElements = [];
+
+        // Initialize the battle
+        function init() {
+            createTimelineMarkers();
+            renderPhase(currentPhase);
+            updateControls();
+        }
+
+        // Create timeline markers
+        function createTimelineMarkers() {
+            for (let i = 0; i < battlePhases.length; i++) {
+                const marker = document.createElement('div');
+                marker.className = 'timeline-marker';
+                marker.style.left = `${(i / (battlePhases.length - 1)) * 100}%`;
+                marker.dataset.phase = i;
+                
+                const label = document.createElement('div');
+                label.className = 'timeline-label';
+                label.textContent = `Phase ${i + 1}: ${battlePhases[i].title}`;
+                
+                marker.appendChild(label);
+                marker.addEventListener('click', () => {
+                    stopPlayback();
+                    currentPhase = i;
+                    renderPhase(currentPhase);
+                    updateControls();
+                });
+                
+                timelineTrack.appendChild(marker);
+            }
+        }
+
+        // Render a specific phase
+        function renderPhase(phaseIndex) {
+            const phase = battlePhases[phaseIndex];
+            
+            // Update phase info
+            phaseTitle.textContent = `Phase ${phase.id}: ${phase.title}`;
+            phaseDescription.textContent = phase.description;
+            
+            // Clear existing units
+            clearUnits();
+            
+            // Create Boeotian units
+            createFormation('boeotian-unit', phase.boeotianFormation.center, phase.boeotianFormation.center.scattered);
+            createFormation('boeotian-unit', phase.boeotianFormation.left, phase.boeotianFormation.left.scattered);
+            createFormation('boeotian-unit', phase.boeotianFormation.right, phase.boeotianFormation.right.scattered);
+            
+            if (phase.boeotianFormation.cavalry) {
+                createFormation('boeotian-unit', phase.boeotianFormation.cavalry, phase.boeotianFormation.cavalry.scattered, true);
+            }
+            
+            // Create Athenian units
+            createFormation('athenian-unit', phase.athenianFormation.center, phase.athenianFormation.center.scattered, phase.athenianFormation.center.fleeing);
+            createFormation('athenian-unit', phase.athenianFormation.left, phase.athenianFormation.left.scattered, phase.athenianFormation.left.fleeing);
+            createFormation('athenian-unit', phase.athenianFormation.right, phase.athenianFormation.right.scattered, phase.athenianFormation.right.fleeing);
+            
+            // Position commanders
+            pagondas.style.left = `${phase.boeotianFormation.commander.x}%`;
+            pagondas.style.top = `${phase.boeotianFormation.commander.y}%`;
+            
+            hippocrates.style.left = `${phase.athenianFormation.commander.x}%`;
+            hippocrates.style.top = `${phase.athenianFormation.commander.y}%`;
+            
+            // Update timeline markers
+            updateTimelineMarkers();
+        }
+
+        // Create a formation of units
+        function createFormation(unitClass, formation, scattered = false, cavalry = false, fleeing = false) {
+            const { x, y, width, depth } = formation;
+            const unitSpacing = cavalry ? 2.5 : 1.5;
+            
+            for (let row = 0; row < depth; row++) {
+                for (let col = 0; col < width; col++) {
+                    const unit = document.createElement('div');
+                    unit.className = `unit ${unitClass}`;
+                    
+                    // Apply random offset if scattered
+                    let offsetX = 0;
+                    let offsetY = 0;
+                    
+                    if (scattered) {
+                        offsetX = (Math.random() - 0.5) * 10;
+                        offsetY = (Math.random() - 0.5) * 10;
+                    }
+                    
+                    if (fleeing) {
+                        offsetX = Math.random() * 15;
+                        offsetY = Math.random() * 15;
+                    }
+                    
+                    unit.style.left = `${x + (col * unitSpacing) + offsetX}%`;
+                    unit.style.top = `${y + (row * unitSpacing) + offsetY}%`;
+                    
+                    if (cavalry) {
+                        unit.style.borderRadius = '50%';
+                    }
+                    
+                    battlefield.appendChild(unit);
+                    unitElements.push(unit);
+                }
+            }
+        }
+
+        // Clear all units from the battlefield
+        function clearUnits() {
+            unitElements.forEach(unit => unit.remove());
+            unitElements = [];
+        }
+
+        // Update timeline markers
+        function updateTimelineMarkers() {
+            const markers = document.querySelectorAll('.timeline-marker');
+            
+            markers.forEach((marker, i) => {
+                if (i === currentPhase) {
+                    marker.classList.add('active');
+                } else {
+                    marker.classList.remove('active');
+                }
+            });
+        }
+
+        // Update control buttons
+        function updateControls() {
+            prevBtn.disabled = currentPhase === 0;
+            nextBtn.disabled = currentPhase === battlePhases.length - 1;
+            
+            if (isPlaying) {
+                playBtn.textContent = 'Pause';
+            } else {
+                playBtn.textContent = 'Play All Phases';
+            }
+        }
+
+        // Go to previous phase
+        function prevPhase() {
+            if (currentPhase > 0) {
+                currentPhase--;
+                renderPhase(currentPhase);
+                updateControls();
+            }
+        }
+
+        // Go to next phase
+        function nextPhase() {
+            if (currentPhase < battlePhases.length - 1) {
+                currentPhase++;
+                renderPhase(currentPhase);
+                updateControls();
+                
+                return true;
+            }
+            return false;
+        }
+
+        // Play through all phases
+        function togglePlayback() {
+            if (isPlaying) {
+                stopPlayback();
+            } else {
+                isPlaying = true;
+                updateControls();
+                
+                playInterval = setInterval(() => {
+                    const hasMore = nextPhase();
+                    
+                    if (!hasMore) {
+                        stopPlayback();
+                    }
+                }, 3000);
+            }
+        }
+
+        // Stop playback
+        function stopPlayback() {
+            if (playInterval) {
+                clearInterval(playInterval);
+            }
+            
+            isPlaying = false;
+            updateControls();
+        }
+
+        // Reset to first phase
+        function resetBattle() {
+            stopPlayback();
+            currentPhase = 0;
+            renderPhase(currentPhase);
+            updateControls();
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', prevPhase);
+        nextBtn.addEventListener('click', nextPhase);
+        playBtn.addEventListener('click', togglePlayback);
+        resetBtn.addEventListener('click', resetBattle);
+
+        // Initialize the battle
+        init();
+    </script>
+</body>
+</html>
